@@ -1,733 +1,66 @@
 // Global variables
 let currentPage = 'home';
 let userGender = null;
-let currentTheme = localStorage.getItem('currentTheme') || 'neutral';
-
-// Fragrance library
+let currentTheme = 'neutral';
 let fragranceLibrary = [];
-
-// Wishlist
 let wishlist = [];
-
-// Weekly planner data
-let weeklyPlanner = {};
-
-// Selected day for fragrance assignment
-let selectedDay = null;
-let selectedFragrance = null;
-
-// Questionnaire data
-let questionnaireAnswers = {};
-let currentQuestionIndex = 0;
-
-// Recently added fragrances (with timestamps)
 let recentlyAddedFragrances = [];
+let weeklyPlanner = {};
+let currentQuestionIndex = 0;
+let questionnaireAnswers = {};
 
-// Local fragrance recommendations
-const fragranceRecommendations = {
-    male: {
-        romantic: {
-            title: "Romantic Evening Fragrances - Masculine",
-            recommendations: [
-                "Tom Ford Oud Wood - Luxurious and unique with oud and sandalwood",
-                "YSL La Nuit de L'Homme - Seductive and mysterious with cardamom and lavender",
-                "Dior Sauvage Elixir - Bold and attention-grabbing with enhanced concentration",
-                "Jean Paul Gaultier Le Male - Provocative and sensual with lavender and vanilla",
-                "Versace Eros - Passionate and eye-catching with mint and vanilla"
-            ]
-        },
-        professional: {
-            title: "Professional Work Fragrances - Masculine",
-            recommendations: [
-                "Prada L'Homme Intense - Clean and sophisticated with iris and amber",
-                "Bleu de Chanel - Versatile and refined with citrus and woody notes",
-                "Hermès Terre d'Hermès - Fresh and earthy with vetiver and citrus",
-                "Dolce & Gabbana The One - Classic and approachable with tobacco and vanilla",
-                "Giorgio Armani Acqua di Gio - Clean and aquatic with marine notes"
-            ]
-        },
-        casual: {
-            title: "Casual Day Fragrances - Masculine",
-            recommendations: [
-                "Calvin Klein Eternity - Fresh and clean with citrus and herbs",
-                "Nautica Voyage - Light and refreshing with apple and lotus",
-                "Davidoff Cool Water - Crisp and invigorating with mint and lavender",
-                "Lacoste Essential - Sporty and energetic with citrus and spices",
-                "Hugo Boss Bottled - Modern and confident with apple and cinnamon"
-            ]
-        },
-        summer: {
-            title: "Summer Fragrances - Masculine",
-            recommendations: [
-                "Giorgio Armani Acqua di Gio - Fresh and aquatic with marine notes",
-                "Bleu de Chanel - Light and versatile with citrus and woody notes",
-                "Dior Sauvage - Crisp and invigorating with bergamot and ambroxan",
-                "Versace Pour Homme - Clean and Mediterranean with citrus and neroli",
-                "Issey Miyake L'Eau d'Issey - Fresh and minimalist with yuzu and lotus"
-            ]
-        },
-        winter: {
-            title: "Winter Fragrances - Masculine",
-            recommendations: [
-                "Tom Ford Oud Wood - Warm and luxurious with oud and sandalwood",
-                "Dior Sauvage Elixir - Bold and warming with enhanced concentration",
-                "YSL La Nuit de L'Homme - Rich and sensual with cardamom and lavender",
-                "Spicebomb by Viktor&Rolf - Spicy and warming with black pepper and vanilla",
-                "Bvlgari Man in Black - Sophisticated and mysterious with rum and leather"
-            ]
-        }
-    },
-    female: {
-        romantic: {
-            title: "Romantic Evening Fragrances - Feminine",
-            recommendations: [
-                "YSL Black Opium - Seductive and mysterious with coffee and vanilla",
-                "Chanel N°5 - Timeless and sophisticated with aldehydes and rose",
-                "Tom Ford Black Orchid - Mysterious and sophisticated with black truffle and orchid",
-                "Marc Jacobs Daisy - Light and romantic with strawberry and violet",
-                "Viktor&Rolf Flowerbomb - Explosive and floral with orchid and patchouli"
-            ]
-        },
-        professional: {
-            title: "Professional Work Fragrances - Feminine",
-            recommendations: [
-                "Chanel Chance - Fresh and optimistic with pink pepper and jasmine",
-                "Marc Jacobs Daisy - Clean and approachable with strawberry and violet",
-                "Jo Malone Wood Sage & Sea Salt - Minimalist and sophisticated with ambrette and sea salt",
-                "Bvlgari Omnia - Light and professional with green tea and white chocolate",
-                "Elizabeth Arden Green Tea - Fresh and energizing with green tea and citrus"
-            ]
-        },
-        casual: {
-            title: "Casual Day Fragrances - Feminine",
-            recommendations: [
-                "Marc Jacobs Daisy - Light and cheerful with strawberry and violet",
-                "Calvin Klein Eternity - Clean and romantic with lily and sandalwood",
-                "Britney Spears Fantasy - Sweet and playful with cupcake and white chocolate",
-                "Vera Wang Princess - Soft and dreamy with water lily and vanilla",
-                "Paris Hilton Can Can - Fresh and fruity with apple and peach"
-            ]
-        },
-        summer: {
-            title: "Summer Fragrances - Feminine",
-            recommendations: [
-                "Marc Jacobs Daisy - Light and fresh with strawberry and violet",
-                "Jo Malone Wood Sage & Sea Salt - Clean and breezy with ambrette and sea salt",
-                "Issey Miyake L'Eau d'Issey - Fresh and aquatic with lotus and freesia",
-                "Bvlgari Omnia - Light and airy with green tea and white chocolate",
-                "Elizabeth Arden Green Tea - Refreshing and energizing with green tea and citrus"
-            ]
-        },
-        winter: {
-            title: "Winter Fragrances - Feminine",
-            recommendations: [
-                "YSL Black Opium - Warm and seductive with coffee and vanilla",
-                "Tom Ford Black Orchid - Rich and mysterious with black truffle and orchid",
-                "Viktor&Rolf Flowerbomb - Intense and floral with orchid and patchouli",
-                "Chanel N°5 - Classic and sophisticated with aldehydes and rose",
-                "Thierry Mugler Angel - Sweet and warm with chocolate and patchouli"
-            ]
-        }
-    },
-    neutral: {
-        romantic: {
-            title: "Romantic Evening Fragrances - Universal",
-            recommendations: [
-                "Maison Margiela Replica Jazz Club - Warm and sensual with tobacco and vanilla",
-                "Le Labo Another 13 - Clean and sophisticated with ambrette and musk",
-                "Byredo Gypsy Water - Mysterious and bohemian with bergamot and vanilla",
-                "Jo Malone Wood Sage & Sea Salt - Fresh and sophisticated with ambrette and sea salt",
-                "Diptyque Philosykos - Natural and sensual with fig and coconut"
-            ]
-        },
-        professional: {
-            title: "Professional Work Fragrances - Universal",
-            recommendations: [
-                "Le Labo Another 13 - Clean and minimalist with ambrette and musk",
-                "Jo Malone Wood Sage & Sea Salt - Fresh and sophisticated with ambrette and sea salt",
-                "Byredo Blanche - Clean and pure with aldehydes and white musk",
-                "Diptyque Philosykos - Natural and professional with fig and coconut",
-                "Maison Margiela Replica Lazy Sunday Morning - Fresh and relaxed with iris and white musk"
-            ]
-        },
-        casual: {
-            title: "Casual Day Fragrances - Universal",
-            recommendations: [
-                "Jo Malone Wood Sage & Sea Salt - Fresh and breezy with ambrette and sea salt",
-                "Maison Margiela Replica Lazy Sunday Morning - Relaxed and comfortable with iris and white musk",
-                "Le Labo Another 13 - Clean and approachable with ambrette and musk",
-                "Byredo Gypsy Water - Natural and free-spirited with bergamot and vanilla",
-                "Diptyque Philosykos - Fresh and natural with fig and coconut"
-            ]
-        },
-        summer: {
-            title: "Summer Fragrances - Universal",
-            recommendations: [
-                "Jo Malone Wood Sage & Sea Salt - Fresh and oceanic with ambrette and sea salt",
-                "Maison Margiela Replica Lazy Sunday Morning - Light and airy with iris and white musk",
-                "Diptyque Philosykos - Fresh and natural with fig and coconut",
-                "Byredo Gypsy Water - Breezy and bohemian with bergamot and vanilla",
-                "Le Labo Another 13 - Clean and minimalist with ambrette and musk"
-            ]
-        },
-        winter: {
-            title: "Winter Fragrances - Universal",
-            recommendations: [
-                "Maison Margiela Replica Jazz Club - Warm and cozy with tobacco and vanilla",
-                "Byredo Gypsy Water - Rich and mysterious with bergamot and vanilla",
-                "Le Labo Another 13 - Sophisticated and warm with ambrette and musk",
-                "Diptyque Philosykos - Natural and comforting with fig and coconut",
-                "Jo Malone Wood Sage & Sea Salt - Fresh yet warming with ambrette and sea salt"
-            ]
-        }
-    }
-};
-
-// Fragrance price database
-const fragrancePriceDatabase = {
-    lastUpdated: "2024-01-15",
-    fragrances: {
-        "Bleu de Chanel": {
-            retailPrice: 135,
-            deals: [
-                { retailer: "Sephora", price: 135, discount: "0%", link: "https://www.sephora.com/product/bleu-de-chanel-P123456" },
-                { retailer: "Nordstrom", price: 128, discount: "5%", link: "https://www.nordstrom.com/s/bleu-de-chanel" },
-                { retailer: "Amazon", price: 115, discount: "15%", link: "https://www.amazon.com/bleu-de-chanel" }
-            ]
-        },
-        "Dior Sauvage": {
-            retailPrice: 145,
-            deals: [
-                { retailer: "Ulta", price: 145, discount: "0%", link: "https://www.ulta.com/dior-sauvage" },
-                { retailer: "Macy's", price: 137, discount: "6%", link: "https://www.macys.com/dior-sauvage" },
-                { retailer: "Walmart", price: 120, discount: "17%", link: "https://www.walmart.com/dior-sauvage" }
-            ]
-        },
-        "Tom Ford Oud Wood": {
-            retailPrice: 350,
-            deals: [
-                { retailer: "Saks Fifth Avenue", price: 350, discount: "0%", link: "https://www.saksfifthavenue.com/tom-ford-oud-wood" },
-                { retailer: "Neiman Marcus", price: 332, discount: "5%", link: "https://www.neimanmarcus.com/tom-ford-oud-wood" },
-                { retailer: "FragranceNet", price: 280, discount: "20%", link: "https://www.fragrancenet.com/tom-ford-oud-wood" }
-            ]
-        },
-        "YSL La Nuit de L'Homme": {
-            retailPrice: 95,
-            deals: [
-                { retailer: "Sephora", price: 95, discount: "0%", link: "https://www.sephora.com/ysl-la-nuit" },
-                { retailer: "Ulta", price: 90, discount: "5%", link: "https://www.ulta.com/ysl-la-nuit" },
-                { retailer: "Amazon", price: 75, discount: "21%", link: "https://www.amazon.com/ysl-la-nuit" }
-            ]
-        },
-        "Chanel N°5": {
-            retailPrice: 135,
-            deals: [
-                { retailer: "Sephora", price: 135, discount: "0%", link: "https://www.sephora.com/chanel-no5" },
-                { retailer: "Nordstrom", price: 128, discount: "5%", link: "https://www.nordstrom.com/chanel-no5" },
-                { retailer: "Amazon", price: 110, discount: "19%", link: "https://www.amazon.com/chanel-no5" }
-            ]
-        },
-        "Marc Jacobs Daisy": {
-            retailPrice: 85,
-            deals: [
-                { retailer: "Sephora", price: 85, discount: "0%", link: "https://www.sephora.com/marc-jacobs-daisy" },
-                { retailer: "Ulta", price: 80, discount: "6%", link: "https://www.ulta.com/marc-jacobs-daisy" },
-                { retailer: "Amazon", price: 65, discount: "24%", link: "https://www.amazon.com/marc-jacobs-daisy" }
-            ]
-        },
-        "Jo Malone Wood Sage & Sea Salt": {
-            retailPrice: 145,
-            deals: [
-                { retailer: "Sephora", price: 145, discount: "0%", link: "https://www.sephora.com/jo-malone-wood-sage" },
-                { retailer: "Nordstrom", price: 137, discount: "6%", link: "https://www.nordstrom.com/jo-malone-wood-sage" },
-                { retailer: "Amazon", price: 120, discount: "17%", link: "https://www.amazon.com/jo-malone-wood-sage" }
-            ]
-        },
-        "Le Labo Another 13": {
-            retailPrice: 285,
-            deals: [
-                { retailer: "Sephora", price: 285, discount: "0%", link: "https://www.sephora.com/le-labo-another-13" },
-                { retailer: "Nordstrom", price: 270, discount: "5%", link: "https://www.nordstrom.com/le-labo-another-13" },
-                { retailer: "Amazon", price: 240, discount: "16%", link: "https://www.amazon.com/le-labo-another-13" }
-            ]
-        },
-        "Byredo Gypsy Water": {
-            retailPrice: 190,
-            deals: [
-                { retailer: "Sephora", price: 190, discount: "0%", link: "https://www.sephora.com/byredo-gypsy-water" },
-                { retailer: "Nordstrom", price: 180, discount: "5%", link: "https://www.nordstrom.com/byredo-gypsy-water" },
-                { retailer: "Amazon", price: 160, discount: "16%", link: "https://www.amazon.com/byredo-gypsy-water" }
-            ]
-        },
-        "Diptyque Philosykos": {
-            retailPrice: 165,
-            deals: [
-                { retailer: "Sephora", price: 165, discount: "0%", link: "https://www.sephora.com/diptyque-philosykos" },
-                { retailer: "Nordstrom", price: 156, discount: "5%", link: "https://www.nordstrom.com/diptyque-philosykos" },
-                { retailer: "Amazon", price: 140, discount: "15%", link: "https://www.amazon.com/diptyque-philosykos" }
-            ]
-        },
-        "Maison Margiela Replica Jazz Club": {
-            retailPrice: 135,
-            deals: [
-                { retailer: "Sephora", price: 135, discount: "0%", link: "https://www.sephora.com/maison-margiela-jazz-club" },
-                { retailer: "Nordstrom", price: 128, discount: "5%", link: "https://www.nordstrom.com/maison-margiela-jazz-club" },
-                { retailer: "Amazon", price: 110, discount: "19%", link: "https://www.amazon.com/maison-margiela-jazz-club" }
-            ]
-        },
-        "Viktor&Rolf Flowerbomb": {
-            retailPrice: 155,
-            deals: [
-                { retailer: "Sephora", price: 155, discount: "0%", link: "https://www.sephora.com/viktor-rolf-flowerbomb" },
-                { retailer: "Ulta", price: 147, discount: "5%", link: "https://www.ulta.com/viktor-rolf-flowerbomb" },
-                { retailer: "Amazon", price: 125, discount: "19%", link: "https://www.amazon.com/viktor-rolf-flowerbomb" }
-            ]
-        },
-        "Calvin Klein Eternity": {
-            retailPrice: 65,
-            deals: [
-                { retailer: "Ulta", price: 65, discount: "0%", link: "https://www.ulta.com/calvin-klein-eternity" },
-                { retailer: "Macy's", price: 61, discount: "6%", link: "https://www.macys.com/calvin-klein-eternity" },
-                { retailer: "Amazon", price: 45, discount: "31%", link: "https://www.amazon.com/calvin-klein-eternity" }
-            ]
-        },
-        "Giorgio Armani Acqua di Gio": {
-            retailPrice: 95,
-            deals: [
-                { retailer: "Sephora", price: 95, discount: "0%", link: "https://www.sephora.com/giorgio-armani-acqua-di-gio" },
-                { retailer: "Ulta", price: 90, discount: "5%", link: "https://www.ulta.com/giorgio-armani-acqua-di-gio" },
-                { retailer: "Amazon", price: 75, discount: "21%", link: "https://www.amazon.com/giorgio-armani-acqua-di-gio" }
-            ]
-        },
-        "Hermès Terre d'Hermès": {
-            retailPrice: 125,
-            deals: [
-                { retailer: "Sephora", price: 125, discount: "0%", link: "https://www.sephora.com/hermes-terre-dhermes" },
-                { retailer: "Nordstrom", price: 118, discount: "6%", link: "https://www.nordstrom.com/hermes-terre-dhermes" },
-                { retailer: "Amazon", price: 100, discount: "20%", link: "https://www.amazon.com/hermes-terre-dhermes" }
-            ]
-        },
-        "Dolce & Gabbana The One": {
-            retailPrice: 85,
-            deals: [
-                { retailer: "Sephora", price: 85, discount: "0%", link: "https://www.sephora.com/dolce-gabbana-the-one" },
-                { retailer: "Ulta", price: 80, discount: "6%", link: "https://www.ulta.com/dolce-gabbana-the-one" },
-                { retailer: "Amazon", price: 65, discount: "24%", link: "https://www.amazon.com/dolce-gabbana-the-one" }
-            ]
-        },
-        "Nautica Voyage": {
-            retailPrice: 35,
-            deals: [
-                { retailer: "Ulta", price: 35, discount: "0%", link: "https://www.ulta.com/nautica-voyage" },
-                { retailer: "Macy's", price: 32, discount: "9%", link: "https://www.macys.com/nautica-voyage" },
-                { retailer: "Amazon", price: 25, discount: "29%", link: "https://www.amazon.com/nautica-voyage" }
-            ]
-        },
-        "Davidoff Cool Water": {
-            retailPrice: 45,
-            deals: [
-                { retailer: "Ulta", price: 45, discount: "0%", link: "https://www.ulta.com/davidoff-cool-water" },
-                { retailer: "Macy's", price: 42, discount: "7%", link: "https://www.macys.com/davidoff-cool-water" },
-                { retailer: "Amazon", price: 30, discount: "33%", link: "https://www.amazon.com/davidoff-cool-water" }
-            ]
-        },
-        "Lacoste Essential": {
-            retailPrice: 55,
-            deals: [
-                { retailer: "Ulta", price: 55, discount: "0%", link: "https://www.ulta.com/lacoste-essential" },
-                { retailer: "Macy's", price: 51, discount: "7%", link: "https://www.macys.com/lacoste-essential" },
-                { retailer: "Amazon", price: 40, discount: "27%", link: "https://www.amazon.com/lacoste-essential" }
-            ]
-        },
-        "Hugo Boss Bottled": {
-            retailPrice: 75,
-            deals: [
-                { retailer: "Sephora", price: 75, discount: "0%", link: "https://www.sephora.com/hugo-boss-bottled" },
-                { retailer: "Ulta", price: 71, discount: "5%", link: "https://www.ulta.com/hugo-boss-bottled" },
-                { retailer: "Amazon", price: 55, discount: "27%", link: "https://www.amazon.com/hugo-boss-bottled" }
-            ]
-        },
-        "Chanel Chance": {
-            retailPrice: 135,
-            deals: [
-                { retailer: "Sephora", price: 135, discount: "0%", link: "https://www.sephora.com/chanel-chance" },
-                { retailer: "Nordstrom", price: 128, discount: "5%", link: "https://www.nordstrom.com/chanel-chance" },
-                { retailer: "Amazon", price: 110, discount: "19%", link: "https://www.amazon.com/chanel-chance" }
-            ]
-        },
-        "Bvlgari Omnia": {
-            retailPrice: 85,
-            deals: [
-                { retailer: "Sephora", price: 85, discount: "0%", link: "https://www.sephora.com/bvlgari-omnia" },
-                { retailer: "Ulta", price: 80, discount: "6%", link: "https://www.ulta.com/bvlgari-omnia" },
-                { retailer: "Amazon", price: 65, discount: "24%", link: "https://www.amazon.com/bvlgari-omnia" }
-            ]
-        },
-        "Elizabeth Arden Green Tea": {
-            retailPrice: 25,
-            deals: [
-                { retailer: "Ulta", price: 25, discount: "0%", link: "https://www.ulta.com/elizabeth-arden-green-tea" },
-                { retailer: "Macy's", price: 23, discount: "8%", link: "https://www.macys.com/elizabeth-arden-green-tea" },
-                { retailer: "Amazon", price: 18, discount: "28%", link: "https://www.amazon.com/elizabeth-arden-green-tea" }
-            ]
-        },
-        "Britney Spears Fantasy": {
-            retailPrice: 35,
-            deals: [
-                { retailer: "Ulta", price: 35, discount: "0%", link: "https://www.ulta.com/britney-spears-fantasy" },
-                { retailer: "Macy's", price: 32, discount: "9%", link: "https://www.macys.com/britney-spears-fantasy" },
-                { retailer: "Amazon", price: 25, discount: "29%", link: "https://www.amazon.com/britney-spears-fantasy" }
-            ]
-        },
-        "Vera Wang Princess": {
-            retailPrice: 45,
-            deals: [
-                { retailer: "Ulta", price: 45, discount: "0%", link: "https://www.ulta.com/vera-wang-princess" },
-                { retailer: "Macy's", price: 42, discount: "7%", link: "https://www.macys.com/vera-wang-princess" },
-                { retailer: "Amazon", price: 30, discount: "33%", link: "https://www.amazon.com/vera-wang-princess" }
-            ]
-        },
-        "Paris Hilton Can Can": {
-            retailPrice: 30,
-            deals: [
-                { retailer: "Ulta", price: 30, discount: "0%", link: "https://www.ulta.com/paris-hilton-can-can" },
-                { retailer: "Macy's", price: 28, discount: "7%", link: "https://www.macys.com/paris-hilton-can-can" },
-                { retailer: "Amazon", price: 20, discount: "33%", link: "https://www.amazon.com/paris-hilton-can-can" }
-            ]
-        },
-        "Issey Miyake L'Eau d'Issey": {
-            retailPrice: 95,
-            deals: [
-                { retailer: "Sephora", price: 95, discount: "0%", link: "https://www.sephora.com/issey-miyake-leau-dissey" },
-                { retailer: "Nordstrom", price: 90, discount: "5%", link: "https://www.nordstrom.com/issey-miyake-leau-dissey" },
-                { retailer: "Amazon", price: 75, discount: "21%", link: "https://www.amazon.com/issey-miyake-leau-dissey" }
-            ]
-        },
-        "Spicebomb by Viktor&Rolf": {
-            retailPrice: 105,
-            deals: [
-                { retailer: "Sephora", price: 105, discount: "0%", link: "https://www.sephora.com/viktor-rolf-spicebomb" },
-                { retailer: "Ulta", price: 99, discount: "6%", link: "https://www.ulta.com/viktor-rolf-spicebomb" },
-                { retailer: "Amazon", price: 80, discount: "24%", link: "https://www.amazon.com/viktor-rolf-spicebomb" }
-            ]
-        },
-        "Bvlgari Man in Black": {
-            retailPrice: 95,
-            deals: [
-                { retailer: "Sephora", price: 95, discount: "0%", link: "https://www.sephora.com/bvlgari-man-in-black" },
-                { retailer: "Ulta", price: 90, discount: "5%", link: "https://www.ulta.com/bvlgari-man-in-black" },
-                { retailer: "Amazon", price: 75, discount: "21%", link: "https://www.amazon.com/bvlgari-man-in-black" }
-            ]
-        },
-        "Thierry Mugler Angel": {
-            retailPrice: 125,
-            deals: [
-                { retailer: "Sephora", price: 125, discount: "0%", link: "https://www.sephora.com/thierry-mugler-angel" },
-                { retailer: "Ulta", price: 118, discount: "6%", link: "https://www.ulta.com/thierry-mugler-angel" },
-                { retailer: "Amazon", price: 100, discount: "20%", link: "https://www.amazon.com/thierry-mugler-angel" }
-            ]
-        },
-        "Byredo Blanche": {
-            retailPrice: 190,
-            deals: [
-                { retailer: "Sephora", price: 190, discount: "0%", link: "https://www.sephora.com/byredo-blanche" },
-                { retailer: "Nordstrom", price: 180, discount: "5%", link: "https://www.nordstrom.com/byredo-blanche" },
-                { retailer: "Amazon", price: 160, discount: "16%", link: "https://www.amazon.com/byredo-blanche" }
-            ]
-        },
-        "Maison Margiela Replica Lazy Sunday Morning": {
-            retailPrice: 135,
-            deals: [
-                { retailer: "Sephora", price: 135, discount: "0%", link: "https://www.sephora.com/maison-margiela-lazy-sunday" },
-                { retailer: "Nordstrom", price: 128, discount: "5%", link: "https://www.nordstrom.com/maison-margiela-lazy-sunday" },
-                { retailer: "Amazon", price: 110, discount: "19%", link: "https://www.amazon.com/maison-margiela-lazy-sunday" }
-            ]
-        }
-    }
-};
-
-// Questionnaire questions (removed gender question)
-const questionnaireQuestions = [
-    {
-        id: 'occasion',
-        title: 'What occasion are you looking for?',
-        subtitle: 'Choose the primary use for your fragrance',
-        type: 'choice',
-        options: [
-            { value: 'casual', label: 'Casual Day', description: 'Everyday wear, comfortable and approachable' },
-            { value: 'professional', label: 'Professional', description: 'Work and business settings' },
-            { value: 'romantic', label: 'Romantic Evening', description: 'Date nights and special occasions' }
-        ]
-    },
-    {
-        id: 'season',
-        title: 'What season do you prefer?',
-        subtitle: 'Select your favorite season for fragrances',
-        type: 'choice',
-        options: [
-            { value: 'summer', label: 'Summer', description: 'Light, fresh, and cooling fragrances' },
-            { value: 'winter', label: 'Winter', description: 'Warm, cozy, and comforting scents' }
-        ]
-    },
-    {
-        id: 'intensity',
-        title: 'How strong do you like your fragrances?',
-        subtitle: 'Choose your preferred intensity level',
-        type: 'choice',
-        options: [
-            { value: 'light', label: 'Light & Subtle', description: 'Soft, barely noticeable scents' },
-            { value: 'moderate', label: 'Moderate', description: 'Balanced, noticeable but not overwhelming' },
-            { value: 'strong', label: 'Strong & Bold', description: 'Powerful, long-lasting fragrances' }
-        ]
-    },
-    {
-        id: 'notes',
-        title: 'What fragrance notes do you prefer?',
-        subtitle: 'Select your favorite scent families',
-        type: 'choice',
-        options: [
-            { value: 'fresh', label: 'Fresh & Clean', description: 'Citrus, aquatic, and clean notes' },
-            { value: 'floral', label: 'Floral & Sweet', description: 'Flowers, vanilla, and sweet notes' },
-            { value: 'woody', label: 'Woody & Earthy', description: 'Sandalwood, vetiver, and earthy notes' },
-            { value: 'spicy', label: 'Spicy & Warm', description: 'Cinnamon, pepper, and warm spices' }
-        ]
-    },
-    {
-        id: 'longevity',
-        title: 'How long should your fragrance last?',
-        subtitle: 'Choose your preferred longevity',
-        type: 'choice',
-        options: [
-            { value: 'short', label: '2-4 Hours', description: 'Light, refreshing throughout the day' },
-            { value: 'medium', label: '4-8 Hours', description: 'Balanced longevity for most occasions' },
-            { value: 'long', label: '8+ Hours', description: 'Long-lasting for all-day wear' }
-        ]
-    },
-    {
-        id: 'price',
-        title: 'What\'s your budget range?',
-        subtitle: 'Select your preferred price range',
-        type: 'choice',
-        options: [
-            { value: 'budget', label: 'Budget Friendly', description: 'Affordable options under $50' },
-            { value: 'mid', label: 'Mid-Range', description: 'Quality fragrances $50-$150' },
-            { value: 'luxury', label: 'Luxury', description: 'Premium fragrances $150+' }
-        ]
-    },
-    {
-        id: 'brands',
-        title: 'Do you have favorite fragrance brands?',
-        subtitle: 'Select brands you trust or want to try',
-        type: 'choice',
-        options: [
-            { value: 'popular', label: 'Popular Brands', description: 'Well-known, widely available brands' },
-            { value: 'niche', label: 'Niche Brands', description: 'Unique, artisanal fragrance houses' },
-            { value: 'mix', label: 'Mix of Both', description: 'Open to both popular and niche options' }
-        ]
-    },
-    {
-        id: 'age',
-        title: 'What age group do you identify with?',
-        subtitle: 'This helps us suggest age-appropriate fragrances',
-        type: 'choice',
-        options: [
-            { value: 'young', label: '18-25', description: 'Fresh, modern, and trendy fragrances' },
-            { value: 'adult', label: '26-40', description: 'Sophisticated and versatile options' },
-            { value: 'mature', label: '40+', description: 'Classic, refined, and elegant scents' }
-        ]
-    },
-    {
-        id: 'lifestyle',
-        title: 'How would you describe your lifestyle?',
-        subtitle: 'This influences our fragrance recommendations',
-        type: 'choice',
-        options: [
-            { value: 'active', label: 'Active & Sporty', description: 'Fresh, energizing fragrances' },
-            { value: 'social', label: 'Social & Outgoing', description: 'Confident, attention-grabbing scents' },
-            { value: 'calm', label: 'Calm & Relaxed', description: 'Soothing, peaceful fragrances' }
-        ]
-    },
-    {
-        id: 'climate',
-        title: 'What\'s your typical climate?',
-        subtitle: 'Climate affects fragrance performance',
-        type: 'choice',
-        options: [
-            { value: 'hot', label: 'Hot & Humid', description: 'Light, refreshing fragrances' },
-            { value: 'cold', label: 'Cold & Dry', description: 'Warm, comforting scents' },
-            { value: 'moderate', label: 'Moderate', description: 'Versatile fragrances for all seasons' }
-        ]
-    },
-    {
-        id: 'collection',
-        title: 'How many fragrances do you own?',
-        subtitle: 'This helps us understand your experience level',
-        type: 'choice',
-        options: [
-            { value: 'none', label: 'None (New to Fragrances)', description: 'We\'ll start with the basics' },
-            { value: 'few', label: '1-5 Fragrances', description: 'Building your collection' },
-            { value: 'many', label: '5+ Fragrances', description: 'Experienced fragrance enthusiast' }
-        ]
-    }
-];
-
-// Initialize app
+// Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded - Starting app initialization');
-    
-    // Prevent double-tap zoom on buttons and interactive elements
-    const interactiveElements = document.querySelectorAll('button, .feature-card, .nav-link, .gender-option, .add-button, .delete-button');
-    
-    interactiveElements.forEach(element => {
-        element.addEventListener('touchstart', function(e) {
-            // Prevent default touch behavior that might cause zoom
-            e.preventDefault();
-        }, { passive: false });
-        
-        // Add touch feedback
-        element.addEventListener('touchstart', function() {
-            this.style.transform = 'scale(0.98)';
-        });
-        
-        element.addEventListener('touchend', function() {
-            this.style.transform = '';
-        });
-        
-        element.addEventListener('touchcancel', function() {
-            this.style.transform = '';
-        });
-    });
-    
-    // Improve textarea touch experience
-    const textareas = document.querySelectorAll('textarea');
-    textareas.forEach(textarea => {
-        textarea.addEventListener('touchstart', function(e) {
-            // Allow normal touch behavior for textareas
-        }, { passive: true });
-    });
-    
-    // Improve input touch experience
-    const inputs = document.querySelectorAll('input[type="text"], input[type="search"]');
-    inputs.forEach(input => {
-        input.addEventListener('touchstart', function(e) {
-            // Allow normal touch behavior for inputs
-        }, { passive: true });
-    });
-    
-    // Add touch-friendly scrolling
-    const scrollableElements = document.querySelectorAll('.page-container, .fragrance-list, .wishlist-container');
-    scrollableElements.forEach(element => {
-        element.style.webkitOverflowScrolling = 'touch';
-        element.style.overscrollBehavior = 'contain';
-    });
-    
-    // Prevent pull-to-refresh on mobile
-    document.body.addEventListener('touchmove', function(e) {
-        if (e.target.closest('.page-container, .fragrance-list, .wishlist-container')) {
-            return;
-        }
-        e.preventDefault();
-    }, { passive: false });
-    
-    // Add haptic feedback for iOS devices
-    if ('vibrate' in navigator) {
-        const hapticElements = document.querySelectorAll('.main-button, .add-button, .delete-button, .feature-card');
-        hapticElements.forEach(element => {
-            element.addEventListener('touchstart', function() {
-                navigator.vibrate(10);
-            });
-        });
-    }
-    
-    // Improve modal touch experience
-    const modalOverlays = document.querySelectorAll('.modal-overlay');
-    modalOverlays.forEach(overlay => {
-        overlay.addEventListener('touchstart', function(e) {
-            if (e.target === overlay) {
-                e.preventDefault();
-                this.style.transform = 'scale(0.98)';
-            }
-        }, { passive: false });
-        
-        overlay.addEventListener('touchend', function(e) {
-            if (e.target === overlay) {
-                this.style.transform = '';
-                // Close modal if tapping overlay
-                const modal = this.querySelector('.modal');
-                if (modal) {
-                    hideModal();
-                }
-            }
-        });
-    });
-    
-    console.log('Touch setup complete - calling initializeApp');
     initializeApp();
-    
+    setupNavigation();
+    setupEventListeners();
     setupGenderModal();
+    loadColorTheme();
 });
 
 function initializeApp() {
-    console.log('Initializing app...');
-    
     // Load saved data
     loadFragrances();
     loadWishlist();
-    loadWeeklyPlanner();
     loadRecentlyAddedFragrances();
+    loadWeeklyPlanner();
     
-    // Load color theme
-    loadColorTheme();
+    // Check if user has completed onboarding
+    const hasCompletedOnboarding = localStorage.getItem('hasCompletedOnboarding');
     
-    // Setup event listeners
-    setupEventListeners();
-    setupNavigation();
-    setupResetButton();
-    
-    // Initialize dashboard
-    initializeDashboard();
-    
-    // Show splash screen
-    showSplashScreen();
-    
-    // Check if user has completed questionnaire
-    const hasCompletedQuestionnaire = localStorage.getItem('questionnaireCompleted');
-    if (hasCompletedQuestionnaire) {
-        // User has completed questionnaire, skip gender modal
-        setTimeout(() => {
-            hideSplashScreen();
-            
-            // Show main alert widget if not dismissed
-            const isDismissed = localStorage.getItem('mainAlertDismissed');
-            if (!isDismissed) {
-                updateMainAlertWidget();
-            }
-        }, 3000);
+    if (!hasCompletedOnboarding) {
+        showSplashScreen();
     } else {
-        // User hasn't completed questionnaire, show begin button
-        // The begin button will handle the flow
+        // Load saved gender preference
+        const savedGender = localStorage.getItem('userGender');
+        if (savedGender) {
+            userGender = savedGender;
+            currentTheme = savedGender;
+            applyTheme(savedGender);
+        }
+        
+        // Initialize dashboard
+        initializeDashboard();
+        updateDashboardCounts();
+        renderRecentlyAddedFragrances();
+        
+        // Show current page
+        const hash = window.location.hash.slice(1) || 'home';
+        navigateToPage(hash, false);
     }
 }
 
-// Splash Screen Functions
 function showSplashScreen() {
     const splashScreen = document.getElementById('splashScreen');
     if (splashScreen) {
         splashScreen.style.display = 'flex';
-        
-        // Check if user has completed questionnaire
-        const hasCompletedQuestionnaire = localStorage.getItem('questionnaireCompleted');
-        if (!hasCompletedQuestionnaire) {
-            // Show begin button after a delay
-            setTimeout(() => {
-                const loadingDots = document.getElementById('loadingDots');
-                const beginButton = document.getElementById('beginButton');
-                if (loadingDots && beginButton) {
-                    loadingDots.style.display = 'none';
-                    beginButton.style.display = 'flex';
-                }
-            }, 2000);
-        }
+        // Show begin button after delay
+        setTimeout(() => {
+            const beginButton = document.querySelector('.begin-button');
+            if (beginButton) {
+                beginButton.style.display = 'flex';
+            }
+        }, 2000);
     }
 }
 
@@ -737,26 +70,22 @@ function hideSplashScreen() {
         splashScreen.classList.add('fade-out');
         setTimeout(() => {
             splashScreen.style.display = 'none';
-        }, 1000);
+        }, 500);
     }
 }
 
 function beginApp() {
     // Hide splash screen
     hideSplashScreen();
-    // Show gender modal after splash
+    // Show gender modal after splash with mobile-friendly delay
     setTimeout(() => {
         showGenderModal();
-    }, 500);
+    }, 300);
 }
 
-// Navigation Functions
 function setupNavigation() {
-    const navLinks = document.querySelectorAll('.nav-link');
-    const navToggle = document.querySelector('.nav-toggle');
-    const navLinksContainer = document.querySelector('.nav-links');
-    
-    navLinks.forEach(link => {
+    // Handle navigation clicks
+    document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const page = this.getAttribute('data-page');
@@ -764,23 +93,12 @@ function setupNavigation() {
         });
     });
     
-    // Mobile navigation toggle
-    if (navToggle) {
-        navToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
-            navLinksContainer.classList.toggle('active');
-        });
-    }
-    
     // Handle browser back/forward
     window.addEventListener('popstate', function(e) {
-        const page = e.state ? e.state.page : 'home';
-        navigateToPage(page, false);
+        if (e.state && e.state.page) {
+            navigateToPage(e.state.page, false);
+        }
     });
-    
-    // Set initial page
-    const hash = window.location.hash.slice(1) || 'home';
-    navigateToPage(hash, false);
 }
 
 function navigateToPage(page, updateHistory = true) {
@@ -810,7 +128,7 @@ function navigateToPage(page, updateHistory = true) {
     if (page === 'library') {
         setTimeout(() => {
             initializeWeeklyPlanner();
-            renderFragranceList(); // Ensure fragrances are displayed
+            renderFragranceList();
         }, 100);
     } else if (page === 'home') {
         setTimeout(() => {
@@ -861,6 +179,45 @@ function setupEventListeners() {
                 addToWishlist();
             }
         });
+    }
+    
+    // Mobile-friendly begin button
+    const beginButton = document.querySelector('.begin-button');
+    if (beginButton) {
+        // Add both click and touch events for mobile compatibility
+        beginButton.addEventListener('click', beginApp);
+        beginButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            beginApp();
+        }, { passive: false });
+        
+        // Ensure button is clickable
+        beginButton.style.pointerEvents = 'auto';
+        beginButton.style.cursor = 'pointer';
+    }
+    
+    // Mobile navigation toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    if (navToggle) {
+        navToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks) {
+                navLinks.classList.toggle('active');
+            }
+        });
+    }
+    
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Settings button
+    const settingsBtn = document.getElementById('settingsBtn');
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', toggleSettingsModal);
     }
 }
 
@@ -2116,43 +1473,31 @@ function renderRecentlyAddedFragrances() {
 }
 
 function initializeDashboard() {
-    loadRecentlyAddedFragrances();
+    // Update dashboard counts
     updateDashboardCounts();
-    renderRecentlyAddedFragrances();
     
-    // Check if questionnaire was completed
-    const savedAnswers = localStorage.getItem('questionnaireAnswers');
-    if (savedAnswers) {
-        try {
-            questionnaireAnswers = JSON.parse(savedAnswers);
-            if (questionnaireAnswers.gender) {
-                userGender = questionnaireAnswers.gender;
-                currentTheme = questionnaireAnswers.gender;
-                applyTheme(questionnaireAnswers.gender);
-            }
-            updateMainAlertWidget();
-            showRecommendationSection();
-        } catch (e) {
-            // Invalid saved data, ignore
-        }
+    // Show wishlist alert if needed
+    const dismissedWishlistAlert = localStorage.getItem('dismissedWishlistAlert');
+    if (!dismissedWishlistAlert && wishlist.length === 0) {
+        setTimeout(() => {
+            showWishlistAlert();
+        }, 2000);
     }
-    
-    // Setup reset button
-    setupResetButton();
 }
 
-function setupResetButton() {
-    const resetBtn = document.getElementById('resetAll');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', resetAllData);
+function showResetConfirmation() {
+    const confirmed = confirm('⚠️ WARNING: This will permanently delete ALL your data including:\n\n• Your fragrance library\n• Wishlist items\n• Weekly planner\n• All preferences\n\nThis action cannot be undone. Are you sure you want to continue?');
+    
+    if (confirmed) {
+        resetAllData();
     }
 }
 
 function resetAllData() {
-    // Clear all localStorage data
+    // Clear all localStorage
     localStorage.clear();
     
-    // Reset global variables
+    // Reset all variables
     fragranceLibrary = [];
     wishlist = [];
     weeklyPlanner = {};
@@ -2162,32 +1507,24 @@ function resetAllData() {
     userGender = null;
     currentTheme = 'neutral';
     
-    // Reset UI elements
+    // Reset UI
+    document.body.classList.remove('male-theme', 'female-theme', 'ocean-theme', 'sunset-theme', 'forest-theme', 'lavender-theme', 'midnight-theme');
+    
+    // Update all displays
     renderFragranceList();
     renderWishlist();
-    populateWishlistSelect();
-    updateDashboardCounts();
     renderRecentlyAddedFragrances();
-    
-    // Reset main alert widget
-    resetMainAlertWidget();
-    
-    // Reset color theme
-    document.body.classList.remove('ocean-theme', 'sunset-theme', 'forest-theme', 'lavender-theme', 'midnight-theme');
-    updateColorThemeSelection();
-    
-    // Reset device mode if active
-    if (isDeviceModeActive) {
-        toggleDeviceMode();
-    }
+    updateDashboardCounts();
+    updateMainAlertWidget();
     
     // Show success notification
     showNotification('All data has been reset successfully!', 'success');
     
-    // Reload page after a short delay to ensure clean state
-    setTimeout(() => {
-        window.location.reload();
-    }, 1500);
+    // Close settings modal
+    toggleSettingsModal();
+    
+    // Redirect to home
+    navigateToPage('home');
 }
 
 function resetMainAlertWidget() {
