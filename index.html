@@ -6,8 +6,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="Easy Fragrance - Your personal fragrance companion. Discover, organize, and track your favorite fragrances with smart recommendations and mood-based suggestions.">
+  <meta name="keywords" content="fragrance, perfume, cologne, scent, fragrance library, fragrance recommendations">
+  <meta name="author" content="Easy Fragrance">
   <meta name="theme-color" content="#8e44ad">
-  <title>Easy Fragrance - Home</title>
+  <title>Easy Fragrance v1.0 - Your Personal Fragrance Companion</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -149,9 +152,6 @@
           </button>
           <button class="settings-btn" id="settingsBtn" onclick="toggleSettingsModal()" title="Settings">
             <span class="settings-icon">⚙️</span>
-          </button>
-          <button class="reset-all" id="resetAll" title="Reset all data (for testing)">
-            <span class="reset-all-icon">🔄</span>
           </button>
         </div>
       </div>
@@ -396,16 +396,16 @@
         
         <!-- Reset Section -->
         <div class="settings-section">
-          <h3>🔄 Reset Options</h3>
-          <p>Reset your data and preferences</p>
+          <h3>Data Management</h3>
+          <p>Manage your app data and preferences</p>
           <div class="reset-options">
-            <button class="settings-button reset-btn" onclick="resetAllData()">
+            <button class="settings-button reset-preferences-btn" onclick="resetPreferences()">
+              <span class="button-icon">🔄</span>
+              <span class="button-text">Reset Preferences</span>
+            </button>
+            <button class="settings-button reset-btn" onclick="showResetConfirmation()">
               <span class="button-icon">🗑️</span>
               <span class="button-text">Reset All Data</span>
-            </button>
-            <button class="settings-button reset-preferences-btn" onclick="resetPreferences()">
-              <span class="button-icon">⚙️</span>
-              <span class="button-text">Reset Preferences</span>
             </button>
           </div>
         </div>
