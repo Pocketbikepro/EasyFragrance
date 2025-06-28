@@ -36,7 +36,7 @@
         <span></span>
         <span></span>
       </div>
-      <button class="begin-button" id="beginButton" onclick="beginApp()" style="display: none;">
+      <button class="begin-button" id="beginButton" style="display: none;">
         <span class="begin-icon">🚀</span>
         <span class="begin-text">Begin Your Journey</span>
       </button>
@@ -98,42 +98,17 @@
         <p id="questionSubtitle">Answer a few questions to get personalized recommendations</p>
       </div>
       
+      <div class="questionnaire-actions">
+        <button class="back-btn" id="backBtn" style="display: none;">Back</button>
+        <button class="next-btn" id="nextBtn">Next</button>
+        <button class="finish-btn" id="finishBtn" style="display: none;">Get Recommendations</button>
+      </div>
+      
       <div class="question-container" id="questionContainer">
         <!-- Questions will be dynamically loaded here -->
       </div>
-      
-      <div class="questionnaire-actions">
-        <button class="back-btn" id="backBtn" onclick="previousQuestion()" style="display: none;">Back</button>
-        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
-        <button class="finish-btn" id="finishBtn" onclick="finishQuestionnaire()" style="display: none;">Get Recommendations</button>
-      </div>
     </div>
   </div>
-
-  <!-- iOS Device Mode -->
-  <div id="iosDeviceMode" class="ios-device-mode">
-    <div class="ios-device-frame">
-      <div class="ios-status-bar">
-        <div class="ios-status-left">
-          <span>9:41</span>
-        </div>
-        <div class="ios-status-right">
-          <span>📶</span>
-          <span>📶</span>
-          <span>🔋</span>
-        </div>
-      </div>
-      <div class="ios-content">
-        <!-- All existing content will be cloned here -->
-      </div>
-      <div class="ios-home-indicator"></div>
-    </div>
-  </div>
-
-  <!-- Device Mode Toggle -->
-  <button class="device-mode-toggle" id="deviceModeToggle" onclick="toggleDeviceMode()">
-    📱
-  </button>
 
   <!-- Modern Header -->
   <header class="modern-header">
@@ -150,7 +125,7 @@
           <button class="theme-toggle" id="themeToggle">
             <span class="theme-icon">🌙</span>
           </button>
-          <button class="settings-btn" id="settingsBtn" onclick="toggleSettingsModal()" title="Settings">
+          <button class="settings-btn" id="settingsBtn" title="Settings">
             <span class="settings-icon">⚙️</span>
           </button>
         </div>
@@ -352,16 +327,6 @@
       </div>
       
       <div class="settings-sections">
-        <!-- Device Mode Section -->
-        <div class="settings-section">
-          <h3>📱 Device Mode</h3>
-          <p>Experience the app in iOS device mode</p>
-          <button class="settings-button device-mode-btn" onclick="toggleDeviceModeFromSettings()">
-            <span class="button-icon">📱</span>
-            <span class="button-text">Toggle iOS Device Mode</span>
-          </button>
-        </div>
-        
         <!-- Color Palette Section -->
         <div class="settings-section">
           <h3>🎨 Color Palette</h3>
@@ -402,6 +367,10 @@
             <button class="settings-button reset-preferences-btn" onclick="resetPreferences()">
               <span class="button-icon">🔄</span>
               <span class="button-text">Reset Preferences</span>
+            </button>
+            <button class="settings-button reset-wishlist-alert-btn" onclick="resetWishlistAlert()">
+              <span class="button-icon">💰</span>
+              <span class="button-text">Show Wishlist Alert</span>
             </button>
             <button class="settings-button reset-btn" onclick="showResetConfirmation()">
               <span class="button-icon">🗑️</span>
